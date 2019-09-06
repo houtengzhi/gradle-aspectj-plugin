@@ -1,7 +1,7 @@
 [ ![Download](https://api.bintray.com/packages/houtengzhi/maven/aspectj-plugin/images/download.svg) ](https://bintray.com/houtengzhi/maven/aspectj-plugin/_latestVersion)
 
-# enhanced-adb-plugin
->Adb command gradle插件
+# AspectJ-plugin
+>AspectJ gradle插件
 
 ### 更新
  1.0.1
@@ -15,14 +15,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.yechy.gradleplugin:adb-plugin:1.0.0'
+        classpath 'com.yechy.gradleplugin:aspectj-plugin:1.0.1'
     }
 }
 ```
 
 在mudule下的build.gradle文件中添加
 ```
-apply plugin: 'com.yechy.adb-plugin'
+apply plugin: 'com.yechy.aspectj-plugin'
 ```
 
 ### 配置项
