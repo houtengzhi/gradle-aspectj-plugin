@@ -1,0 +1,19 @@
+apply plugin: 'maven'
+
+def mavenReleaseUrl = 'http://192.168.1.227:8081/nexus/content/repositories/gradle-plugin/'
+def mavenSnapshotUrl = 'http://192.168.1.227:8081/nexus/content/repositories/android-snapshots/'
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories {
+        mavenDeployer {
+            repository(url: uri(mavenReleaseUrl)) {
+                authentication(userName: MAVEN_USERNAME, password: MAVEN_PASSWORD)
+            }
+
+            snapshotRepository(url: uri(mavenSnapshotUrl)) {
+                authentication(userName: MAVEN_USERNAME, password: MAVEN_PASSWORD)
+            }
+        }
+    }
+}
