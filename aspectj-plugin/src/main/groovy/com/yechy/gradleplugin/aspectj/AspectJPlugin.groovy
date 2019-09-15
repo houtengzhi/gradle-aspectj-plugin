@@ -41,8 +41,14 @@ class AspectJPlugin implements Plugin<Project> {
             variants = project.android.libraryVariants
         }
 
+        def gradleVersion = project.gradle.gradleVersion
+        println("gralde version: ${gradleVersion}")
         project.dependencies {
-            compile "org.aspectj:aspectjrt:1.8.9"
+            if (gradleVersion > "4.8") {
+                implementation 'org.aspectj:aspectjrt:1.8.9'
+            } else {
+                compile "org.aspectj:aspectjrt:1.8.9"
+            }
         }
 
         variants.all { variant->
@@ -50,10 +56,15 @@ class AspectJPlugin implements Plugin<Project> {
             log.info('     AspectJ开始编织class        ')
             log.info('================================')
 
-            JavaCompile javaCompile = variant.javaCompile
+            JavaCompile javaCompile
+            if (variant.hasProperty('javaCompileProvider')) {
+                javaCompile = variant.javaCompileProvider.get()
+            } else {
+                javaCompile = variant.hasProperty('javaCompiler') ? variant.javaCompiler : variant.javaCompile
+            }
             javaCompile.doLast {
                 String[] args = ["-showWeaveInfo",
-                                 "-1.5",
+                                 "-1.8",
                                  "-inpath", javaCompile.destinationDir.toString(),
                                  "-aspectpath", javaCompile.classpath.asPath,
                                  "-d", javaCompile.destinationDir.toString(),
@@ -61,6 +72,9 @@ class AspectJPlugin implements Plugin<Project> {
                                  "-bootclasspath", project.android.bootClasspath.join(
                         File.pathSeparator)]
 
+                args += "-log"
+                args += "wave.log"
+                log.debug "ajc args: " + Arrays.toString(args)
                 MessageHandler handler = new MessageHandler(true);
                 new Main().run(args, handler)
 
